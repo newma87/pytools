@@ -1,0 +1,8 @@
+entity User { // (user) 后台用户列表
+    loginName String,   // [50] <> ^ 登录名字
+    mobilePhone String, // [20] <> ^ 手机号码   
+    password String,    // [50] <> 密码
+    status Integer,     // <0> 用户激活状态，1：为激活，0为非激活（默认） 
+    lastLoginTime Instant, // (last_login_time) 上次登录时间
+    lastLoginIp Instant    // (last_login_ip) 上次登录IP
+}

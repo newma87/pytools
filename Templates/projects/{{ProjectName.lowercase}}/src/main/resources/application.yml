@@ -1,0 +1,60 @@
+server:
+  port: ${port:80}
+
+# JPA entity 配置
+entitymanager:
+  packagesToScan: {{Package}}.domain
+
+# 系统监控配置
+management:
+  endpoints:
+    web:
+      base-path: /actuator  # 监控的base url，如 /actuator/info
+      exposure:
+        include: "*"        # allow all actuator status
+  endpoint:
+    health:
+      show-details: ALWAYS  # more detail when showing health status
+
+spring:
+  application:
+    name: {{ProjectName}}
+
+  # spring boot admin monitor config
+  boot:
+    admin:
+      context-path: "/monitor"  # admin server is not within this app, but normally it should be in spring cloud registry server app
+      client:
+        url: http://localhost:${server.port}/monitor # admin client to collect app instance status info to admin path
+        
+  profiles:
+    active: dev
+
+  jpa:
+    hibernate:
+      ddl-auto: none # 不采用hibernate来生成数据库
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+# 日志配置
+logging:
+  level:
+    org.springframework.web: WARN
+    org.springframework.security.web: WARN
+    org.springframework.boot.web: WARN
+  file: logs/application.log
+
+default:
+  # 安全配置
+  security:
+    jwt:
+      token-validate-in-second: 604800 # (7 * 24 * 60 * 60) 一周时间
+      token-validate-in-second-for-rememberme: 604800 # (7 * 24 * 60 * 60) 一周时间
+  # liquibase 配置
+  liquibase:
+    change-log: classpath:changelog/master.xml
+    drop-first: false
+    enabled: true #　启用liquibase，jpa.hibernate.ddl-auto必须设置为none
+  # 项目中自定义配置的属性请放在此处

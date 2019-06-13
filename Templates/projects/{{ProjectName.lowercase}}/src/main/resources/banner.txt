@@ -1,0 +1,9 @@
+
+${AnsiColor.GREEN}     _______.     ___       __   __      ${AnsiColor.RED} _______  __       _______. __    __  
+${AnsiColor.GREEN}    /       |    /   \     |  | |  |     ${AnsiColor.RED}|   ____||  |     /       ||  |  |  | 
+${AnsiColor.GREEN}   |   (----`   /  ^  \    |  | |  |     ${AnsiColor.RED}|  |__   |  |    |   (----`|  |__|  | 
+${AnsiColor.GREEN}    \   \      /  /_\  \   |  | |  |     ${AnsiColor.RED}|   __|  |  |     \   \    |   __   | 
+${AnsiColor.GREEN}.----)   |    /  _____  \  |  | |  `----.${AnsiColor.RED}|  |     |  | .----)   |   |  |  |  | 
+${AnsiColor.GREEN}|_______/    /__/     \__\ |__| |_______|${AnsiColor.RED}|__|     |__| |_______/    |__|  |__| 
+                                                                               
+${AnsiColor.BRIGHT_BLUE}:: 旗鱼软件  版权所有 :: Running Spring Boot ${spring-boot.version} :: ${AnsiColor.DEFAULT}
