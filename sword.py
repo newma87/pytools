@@ -1,5 +1,6 @@
 import os
 import re
+import codecs
 
 class Sword(object):
     def __init__(self):
@@ -67,14 +68,15 @@ class Sword(object):
 
     def renderFile(self, srcPath, tarPath, context):
         try:
-            with open(srcPath, 'r', encoding = 'utf-8') as srcFile:
+            with codecs.open(srcPath, 'r', encoding = 'utf-8') as srcFile:
                 self.__FILE__ = srcPath
-                with open(tarPath, 'w', encoding = 'utf-8') as tarFile:
+                with codecs.open(tarPath, 'w', encoding = 'utf-8') as tarFile:
                     lineNum = 0
                     for line in srcFile:
                         self.__LINE__ = lineNum
                         result = self.renderLine(line, context)
-                        print(result, file = tarFile, end='')
+                        tarFile.write(result)
+                        #print(result, file=tarFile, end="")
                         lineNum += 1
         except IOError as err:
             print(r'Error: ' + str(err))

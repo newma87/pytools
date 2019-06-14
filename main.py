@@ -6,6 +6,7 @@ from sword import Sword
 import random
 import string
 import json
+import codecs
 
 def generate_activation_code(len=16, n=1):
     '''生成n个长度为len的随机序列码'''
@@ -30,8 +31,9 @@ def copyDir(source, target):
         tarPath = os.path.join(target, item)
         if os.path.isfile(path):
             # copy file
-            with open(path, 'r', encoding = 'utf-8') as srcFile:
-                with open(tarPath, 'w', encoding = 'utf-8') as tarFile:
+            print("copy file" + path + " to " + tarPath)
+            with codecs.open(path, 'r', encoding = 'utf-8') as srcFile:
+                with codecs.open(tarPath, 'w', encoding = 'utf-8') as tarFile:
                     while True:
                         content = srcFile.read(1024*1024*10)
                         if len(content) == 0:
@@ -52,7 +54,7 @@ def main():
     args = usage()
     context = {}
     if args.configure:
-        with open(args.configure, 'r', encoding = 'utf-8') as conf:
+        with codecs.open(args.configure, 'r', encoding = 'utf-8') as conf:
             context = json.load(conf)
 
     if args.project_name:
