@@ -4,7 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Objects;
+import java.util.*;
 
 import {{ package }}.common.auditor.Auditable;
 
