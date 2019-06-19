@@ -2,6 +2,8 @@ import os
 import re
 import codecs
 
+BIN_EXT = [".jar", ".exe", ".png", ".jpeg", ".ico", ".so", ".dll", ".a", ".war"]
+
 class Sword(object):
     def __init__(self):
         self.__LINE__ = 0
@@ -23,6 +25,35 @@ class Sword(object):
     def split(value):
         lists = value.split('.')
         return os.path.sep.join(lists)
+    
+    @staticmethod
+    def get_file_extension(filename):
+        arr = os.path.splitext(filename)
+        return arr[len(arr) - 1]
+
+    @staticmethod
+    def copyFile(source, target):
+        print("copy file" + source + " to " + target)
+        with codecs.open(source, 'rb') as srcFile:
+            with codecs.open(target, 'wb') as tarFile:
+                while True:
+                    content = srcFile.read(1024*1024*10)
+                    if len(content) == 0:
+                        break
+                    tarFile.write(content)
+
+    @staticmethod
+    def copyDir(source, target):
+        lists = os.listdir(source)
+        for item in lists:
+            path = os.path.join(source, item)
+            tarPath = os.path.join(target, item)
+            if os.path.isfile(path):
+                Sword.copyFile(path, tarPath)
+            else:
+                if not os.path.exists(tarPath):
+                    os.mkdir(tarPath)
+                Sword.copyDir(path, tarPath)
 
     @staticmethod
     def mkdir(newdir):
@@ -91,8 +122,11 @@ class Sword(object):
                 tarPath = self.renderLine(os.path.join(tarDir, parent, subPath), context)
 
                 if os.path.isfile(path):
-                    print(r"processing file \"" + path + "\"")
-                    self.renderFile(path, tarPath, context)
+                    if (Sword.get_file_extension(path) in BIN_EXT):
+                        Sword.copyFile(path, tarPath)
+                    else:
+                        print(r"processing file \"" + path + "\"")
+                        self.renderFile(path, tarPath, context)
                 else:
                     if not os.path.exists(tarPath):
                         Sword.mkdir(tarPath)

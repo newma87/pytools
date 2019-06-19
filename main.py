@@ -8,6 +8,8 @@ import string
 import json
 import codecs
 
+DIRECT_COPY = ["scripts"]
+
 def generate_activation_code(len=16, n=1):
     '''生成n个长度为len的随机序列码'''
     random.seed()
@@ -23,32 +25,6 @@ def usage():
     parser.add_argument('target', help='Target path directory')
     arg = parser.parse_args()
     return arg
-
-def copyDir(source, target):
-    lists = os.listdir(source)
-    for item in lists:
-        path = os.path.join(source, item)
-        tarPath = os.path.join(target, item)
-        if os.path.isfile(path):
-            # copy file
-            #print("copy file" + path + " to " + tarPath)
-            try:
-                with codecs.open(path, 'rb') as srcFile:
-                    try:
-                        with codecs.open(tarPath, 'wb') as tarFile:
-                            while True:
-                                content = srcFile.read(1024*1024*10)
-                                if len(content) == 0:
-                                    break
-                                tarFile.write(content)
-                    except UnicodeDecodeError as err:
-                        print("Open file " + tarPath + " error: " + str(err))
-            except UnicodeDecodeError as err:
-                print("Open file " + path + " error: " + str(err))
-        else:
-            if not os.path.exists(tarPath):
-                os.mkdir(tarPath)
-            copyDir(path, tarPath)
 
 def RandomPassword(value):
     return generate_activation_code(len=16)[0]
@@ -93,11 +69,11 @@ def main():
         else:
             if not os.path.exists(tarPath):
                 os.mkdir(tarPath)
-            if items != "scripts":
+            if not items in DIRECT_COPY:
                 sword.renderDir(path, tarPath, context)
             else:
                 print("Copy directory \"" + path + "\" to \"" + tarPath + "\"")
-                copyDir(path, tarPath)
+                Sword.copyDir(path, tarPath)
     print ("End of render!")
 
 if __name__ == '__main__':
