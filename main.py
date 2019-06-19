@@ -31,14 +31,20 @@ def copyDir(source, target):
         tarPath = os.path.join(target, item)
         if os.path.isfile(path):
             # copy file
-            print("copy file" + path + " to " + tarPath)
-            with codecs.open(path, 'r', encoding = 'utf-8') as srcFile:
-                with codecs.open(tarPath, 'w', encoding = 'utf-8') as tarFile:
-                    while True:
-                        content = srcFile.read(1024*1024*10)
-                        if len(content) == 0:
-                            break
-                        tarFile.write(content)
+            #print("copy file" + path + " to " + tarPath)
+            try:
+                with codecs.open(path, 'rb') as srcFile:
+                    try:
+                        with codecs.open(tarPath, 'wb') as tarFile:
+                            while True:
+                                content = srcFile.read(1024*1024*10)
+                                if len(content) == 0:
+                                    break
+                                tarFile.write(content)
+                    except UnicodeDecodeError as err:
+                        print("Open file " + tarPath + " error: " + str(err))
+            except UnicodeDecodeError as err:
+                print("Open file " + path + " error: " + str(err))
         else:
             if not os.path.exists(tarPath):
                 os.mkdir(tarPath)

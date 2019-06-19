@@ -79,7 +79,7 @@ class Sword(object):
                         #print(result, file=tarFile, end="")
                         lineNum += 1
         except IOError as err:
-            print(r'Error: ' + str(err))
+            print(r'Render file "' + srcPath + '" to "' + tarPath + '" error: ' + str(err))
         
     def renderDir(self, srcDir, tarDir, context):
         def exploreDir(myDir, parent = ""):

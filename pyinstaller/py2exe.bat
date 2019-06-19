@@ -1,0 +1,1 @@
+pyinstaller -F -i sword.ico -n sword --distpath .. ../main.py
