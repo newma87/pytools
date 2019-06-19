@@ -1,7 +1,7 @@
 package {{Package}}.config;
 
 import {{Package}}.common.Http401UnauthorizedEntryPoint;
-import {{Package}}.security.SystemPrivelege;
+import {{Package}}.security.RolePermission;
 import {{Package}}.security.jwt.JWTConfigurer;
 import {{Package}}.security.jwt.TokenProvider;
 import org.springframework.beans.factory.BeanInitializationException;
@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/actuator/**").hasAuthority(SystemPrivelege.ADMIN)
+                    .antMatchers("/actuator/**").hasAuthority(RolePermission.ADMIN)
                     .anyRequest().authenticated()
                 .and()
                     .apply(securityConfigurerAdapter());

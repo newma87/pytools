@@ -1,9 +1,10 @@
 package {{Package}}.security;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
+import java.util.*;
 
 /**
  * Author: newma<newma@live.cn>
@@ -14,17 +15,22 @@ public class JWTUser implements UserDetails {
 
     private String loginName;
     private String password;
-    private Integer authority;      // 用户的系统权限值
+    private Optional<String[]> authorities;      // 用户的系统权限值
 
-    public JWTUser(String loginName, String password, Integer authority) {
+    public JWTUser(String loginName, String password, String[] authorities) {
         this.loginName = loginName;
         this.password = password;
-        this.authority = authority;
+        this.authorities = Optional.of(authorities);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return SystemPrivelege.getPrivileges(this.authority);
+        Collection<GrantedAuthority> result = new ArrayList<>();
+        if (authorities.isPresent()) {
+            Arrays.asList(authorities.get()).stream()
+                    .forEach((authority) -> result.add(new SimpleGrantedAuthority(authority)));
+        }
+        return result;
     }
 
     @Override
@@ -37,8 +43,8 @@ public class JWTUser implements UserDetails {
         return this.loginName;
     }
 
-    public Integer getAuthority() {
-        return this.getAuthority();
+    public String[] getRawAuthorities() {
+        return this.authorities.get();
     }
 
     @Override

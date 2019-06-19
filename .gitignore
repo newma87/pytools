@@ -3,3 +3,4 @@ result/
 **/build/
 *.spec
 **/__pycache__/
+**/jdls/*.png

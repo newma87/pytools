@@ -1,11 +1,14 @@
 package {{Package}}.util;
 
 import {{Package}}.security.JWTUser;
-import {{Package}}.security.SystemPrivelege;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Author: newma<newma@live.cn>
@@ -38,32 +41,21 @@ public final class SecurityUtil {
         return null;
     }
 
-    public static boolean isAuthenticated() {
+    public static boolean isCurrentUserInRole(String authority) {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
         if (authentication != null) {
             if (authentication.getPrincipal() instanceof UserDetails) {
                 JWTUser springSecurityUser = (JWTUser) authentication.getPrincipal();
-                return springSecurityUser.getAuthority() == 0;
-            } else {
-                return authentication.getAuthorities().stream()
-                        .noneMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(SystemPrivelege.ANONYMOUS));
-            }
-        }
-        return false;
-    }
-
-    public static boolean isCurrentUserInRole(int authority) {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        if (authentication != null) {
-            if (authentication.getPrincipal() instanceof UserDetails) {
-                JWTUser springSecurityUser = (JWTUser) authentication.getPrincipal();
-                return (springSecurityUser.getAuthority() & authority) > 0;
+                String[] authorities = springSecurityUser.getRawAuthorities();
+                if (authorities.length > 0) {
+                    return Arrays.asList(authorities).stream()
+                            .anyMatch((author) -> author.compareTo(authority) == 0);
+                }
             } else {
                 return authentication.getAuthorities().stream()
                         .anyMatch(grantedAuthority ->
-                                grantedAuthority.getAuthority().equals(SystemPrivelege.getPrivilegeName(authority)));
+                                grantedAuthority.getAuthority().equals(authority));
             }
         }
         return false;

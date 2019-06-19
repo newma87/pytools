@@ -1,8 +1,30 @@
-entity User { // (user) 后台用户列表
-    loginName String,   // [50] <> ^ 登录名字
-    mobilePhone String, // [20] <> ^ 手机号码   
+entity User { // (sf_user) 后台用户列表
+    loginName String,   // (login_name) [50] <> ^ 登录名字
+    mobilePhone String, // (mobile_phone) [20] <> ^ 手机号码   
     password String,    // [50] <> 密码
-    status Integer,     // <0> 用户激活状态，1：为激活，0为非激活（默认） 
+    status Integer,     // <0> 用户激活状态，1：为激活，0为非激活（默认）
     lastLoginTime Instant, // (last_login_time) 上次登录时间
     lastLoginIp Instant    // (last_login_ip) 上次登录IP
+}
+
+entity Role { // (sf_role)  后台角色表，可动态创建
+    name String,        // [50] <> ^ 角色名
+    description String  // [255] 角色描述
+}
+
+entity Permission {  // (sf_permission)  后台权限表
+    name String,            // [50] <> 权限的名称
+    authority String,           // [50] <> ^ 权限唯一识别简称
+    order Integer,          // <0> 权限排序(数值越小越靠前)
+    description String,     // [255] 权限描述
+    hasChild Boolean,       // <0> 是否有子权限
+    parent Integer          // 父权限的ID
+}
+
+relationship OneToOne { // (sf_invisable_user_role) 此关系不会出现中间表
+    User {role} to Role
+}
+
+relationship ManyToMany {   // (sf_role_permission) 此关系有中间表
+    Role {permissions} to Permission {roles}
 }

@@ -5,12 +5,12 @@ import javax.annotation.PostConstruct;
 
 import {{Package}}.config.property.SecurityProperty;
 import {{Package}}.security.JWTUser;
-import {{Package}}.security.SystemPrivelege;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.*;
@@ -46,7 +46,7 @@ public class TokenProvider {
             1000 * securityProperty.getJwt().getTokenValidateInSecondForRememberMe();
     }
 
-    public String createToken(String loginName, Integer authority, Boolean rememberMe) {
+    public String createToken(String loginName, List<String> authorities, Boolean rememberMe) {
         long now = (new Date()).getTime();
         Date validity;
         if (rememberMe) {
@@ -57,14 +57,18 @@ public class TokenProvider {
 
         return Jwts.builder()
             .setSubject(loginName)
-            .claim(AUTHORITIES_KEY, authority.toString())
+            .claim(AUTHORITIES_KEY, String.join(";", authorities))
             .signWith(SignatureAlgorithm.HS512, secretKey)
             .setExpiration(validity)
             .compact();
     }
 
     public String createToken(Authentication authentication, Boolean rememberMe) {
-        return createToken(authentication.getName(), SystemPrivelege.getRevertPrivileges(authentication.getAuthorities()), rememberMe);
+        List<String> authorities = new ArrayList<>();
+        authentication.getAuthorities()
+                .stream()
+                .forEach(authority -> authorities.add(((GrantedAuthority) authority).getAuthority()));
+        return createToken(authentication.getName(), authorities, rememberMe);
     }
 
     public Authentication getAuthentication(String token) {
@@ -72,11 +76,12 @@ public class TokenProvider {
             .setSigningKey(secretKey)
             .parseClaimsJws(token)
             .getBody();
-
-        Integer authorities = Integer.valueOf(claims.get(AUTHORITIES_KEY).toString());
+        String authorication = Optional.ofNullable((String)claims.get(AUTHORITIES_KEY))
+                                                    .orElseGet(() -> "");
+        String[] authorities = authorication.split(";");
         JWTUser principal = new JWTUser(claims.getSubject(), "",  authorities);
 
-        return new UsernamePasswordAuthenticationToken(principal, token, SystemPrivelege.getPrivileges(authorities));
+        return new UsernamePasswordAuthenticationToken(principal, token, principal.getAuthorities());
     }
 
     public boolean validateToken(String authToken) {
