@@ -5,6 +5,10 @@
 
 ### 运行需求
 
+_**<font color='red'> 在windows平台下，不需要安装pip和依赖的包，可直接运行jdlcompiler.exe（此工具在win7和win10下正常运行，如有问题请联系 <newma@live.cn>）</font>**_
+
+### 二次开发环境配置
+
 **安装`python2.7`**
 [百度安装经验](https://jingyan.baidu.com/article/c910274be14d64cd361d2dd8.html)
 
@@ -25,14 +29,16 @@ python get-pip.py
 pip install -r requirements.txt
 ```
 
-### 工具使用
+### 工具运行
 
-`main.py`为入口模块
+1. `main.py`为入口模块
 
-运行以下命令查看参数
-```bash
-python main.py -h 
-```
+    运行以下命令查看参数
+    ```bash
+    python main.py -h 
+    ```
+
+2. `windows`平台下可使用`jdlcompiler.exe`替代
 
 _代码生成的模版文件放在`tempalte`目录_
 

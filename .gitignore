@@ -1,2 +1,4 @@
 *.pyc
 result/
+**/build/
+*.spec

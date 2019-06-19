@@ -47,7 +47,7 @@
 @if not exist "%DOMAIN_DIR%" (
     if exist "%SCRIPT_DIR%\main.py" (
         echo "Auto generate jdl code ..."
-        python "%SCRIPT_DIR%\main.py" "%JDL_DIR%\{{ProjectName}}.jdl" -p %PACKAGE% -w "%PROJ_DIR%"  -t "%SCRIPT_DIR%\template" -g "%SCRIPT_DIR%\grammar" -T "{{ProjectName|lowercase}}" -x -r
+        %SCRIPT_DIR%\jdlcompiler.exe "%JDL_DIR%\{{ProjectName}}.jdl" -p %PACKAGE% -w "%PROJ_DIR%"  -t "%SCRIPT_DIR%\template" -g "%SCRIPT_DIR%\grammar" -T "{{ProjectName|lowercase}}" -x -r
     ) else (
         echo "Error: not found main.py in directory %SCRIPT_DIR%"
         goto error

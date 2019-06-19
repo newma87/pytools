@@ -80,7 +80,7 @@ class PClass(PBase):
         del self.properties[index]
         # reset propertyIndex
         self.propertyIndex.clear()
-        for index in xrange(len(self.properties)):
+        for index in range(0, len(self.properties)):
             prop = self.properties[index]
             self.propertyIndex[prop.name] = index
 
