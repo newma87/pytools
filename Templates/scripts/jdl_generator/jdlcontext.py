@@ -19,6 +19,7 @@ class ParserContext:
         self.curObjectName = None
         self.curObjectType = None
         self.curObjectComment = None
+        self.curRelateTableName = None
 
         self.classes = {}
     
@@ -26,6 +27,7 @@ class ParserContext:
         self.curObjectType = type.value
         self.curObjectName = name.value
         self.curFiledName = None  # 退出属性
+        self.curRelateTableName = None  # 退出关系
 
         if self.curObjectType == u"relationship":
             return
@@ -47,6 +49,7 @@ class ParserContext:
             if len(aliases) > 0:
                 curCls.setAlias(aliases[0])
         elif self.curObjectType == u"relationship":
+            self.curRelateTableName = aliases[0]
             pass
 
     def __addCommentToField(self, aliases, lengths, default, nullable, unique, primary, comment, token):
@@ -80,11 +83,10 @@ class ParserContext:
 
             if len(aliases) > 0:  # 左关联的别名
                 leftProp.setAlias(aliases[0])
+                rightProp.setForeignerPropertyAlias(aliases[0])
             if len(aliases) > 1:    # 右关联的别名
-                rightProp.setForeignerPropertyAlias(aliases[1])
-            if len(aliases) > 2:    # 关联表的名字
-                leftCls.setForeignerTableName(aliases[2])
-                rightCls.setForeignerTableName(aliases[2])
+                rightProp.setAlias(aliases[1])
+                leftProp.setForeignerPropertyAlias(aliases[1])
         else:
             print(u"unprocess comment for object type {0}".format(self.curObjectType))
 
@@ -167,6 +169,9 @@ class ParserContext:
         if self.curObjectName == u"ManyToMany" or self.curObjectName == u"OneToOne":
             lProp.setIsForeignerMaster(True)
             rProp.setIsForeignerMaster(False)
+            if self.curRelateTableName is not None:
+                lProp.setForeignerTableName(self.curRelateTableName)
+                rProp.setForeignerTableName(self.curRelateTableName)
 
     def addEnum(self, name, value = None):
         curCls = self.classes[self.curObjectName]

@@ -376,11 +376,11 @@ class ForeignerModel:
         if prop.relationship == "ManyToMany":
             self.baseTable = baseClass.extend.alias
             self.baseColumnRef = basePrimary.extend.alias
-            self.baseColumn = u"{0}_{1}".format(self.baseTable, basePrimary.extend.alias).lower()
+            self.baseColumn = prop.extend.alias #u"{0}_{1}".format(self.baseTable, basePrimary.extend.alias).lower()
             self.baseColumnType = ColumnModel.getColumnType(basePrimary)
             self.referenceTable = refClass.extend.alias
             self.referenceColumnRef = refPrimary.extend.alias
-            self.referenceColumn = u"{0}_{1}".format(self.referenceTable, refPrimary.extend.alias).lower()
+            self.referenceColumn = prop.foreignerPropertyAlias #u"{0}_{1}".format(self.referenceTable, refPrimary.extend.alias).lower()
             self.referenceColumnType = ColumnModel.getColumnType(refPrimary)
             self.name = prop.foreignerTableName
         else:
