@@ -15,9 +15,13 @@ public class RequestLoggingFilterConfig {
     @Bean
     public CommonsRequestLoggingFilter logFilter() {
         CommonsRequestLoggingFilter filter = new RequestLoggingFilter();
-        /*((RequestLoggingFilter) filter).get()
-                .exclude("/apiv1/pad/apk/getTheLatest")
-                .exclude("/apiv1/pad/user/activeClient");*/
+        ((RequestLoggingFilter) filter)
+                .get()
+                .exclude("/actuator/**")
+                .exclude("/monitor/**")
+                .post()
+                .exclude("/actuator/**")
+                .exclude("/monitor/**");
         return filter;
     }
 }

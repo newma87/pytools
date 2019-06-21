@@ -36,10 +36,6 @@ public class DomainUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         Optional<User> userFromDatabase = userRepository.findOneByLoginName(login);
         if(!userFromDatabase.isPresent()) {
-            log.info("Not found user by login name {}, try to found with user name", login);
-            userFromDatabase = userRepository.findOneByLoginName(login);
-        }
-        if(!userFromDatabase.isPresent()) {
             log.info("Not found user by name {}, try to found with user phone", login);
             userFromDatabase = userRepository.findOneByMobilePhone(login);
         }

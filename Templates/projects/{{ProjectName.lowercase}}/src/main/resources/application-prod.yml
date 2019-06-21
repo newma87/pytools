@@ -9,7 +9,7 @@ spring:
 # 日志配置
 logging:
   level:
-    ${Package}: INFO
+    {{Package}}: INFO
 
 default:
   security:

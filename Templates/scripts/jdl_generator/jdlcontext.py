@@ -49,7 +49,8 @@ class ParserContext:
             if len(aliases) > 0:
                 curCls.setAlias(aliases[0])
         elif self.curObjectType == u"relationship":
-            self.curRelateTableName = aliases[0]
+            if len(aliases) > 0:
+                self.curRelateTableName = aliases[0]
             pass
 
     def __addCommentToField(self, aliases, lengths, default, nullable, unique, primary, comment, token):
