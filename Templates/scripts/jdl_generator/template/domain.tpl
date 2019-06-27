@@ -27,18 +27,18 @@ public {{type}} {{name}} extends Auditable implements Serializable {
     private static final long serialVersionUID = 1L;
     {% for prop in properties %}
 
-        {% if prop.isForeignerKey %}
+        {% if prop.relationship %}
             {% if prop.relationship == "ManyToMany" %}
-                {% if prop.isForeignerMaster %}
+                {% if prop.isLeader %}
     @{{prop.relationship}}
-    @JoinTable(name = "{{prop.foreignerTableName}}", 
-                joinColumns = @JoinColumn(name = "{{prop.foreignerPropertyAlias}}"),
-                inverseJoinColumns = @JoinColumn(name = "{{prop.extend.alias}}"))
+    @JoinTable(name = "{{prop.relationshipAlias}}", 
+                joinColumns = @JoinColumn(name = "{{prop.extend.alias}}"),
+                inverseJoinColumns = @JoinColumn(name = "{{prop.slavePropAlias}}"))
                 {% else %}
-    @{{prop.relationship}}(mappedBy = "{{prop.foreignerPropertyName}}")
+    @{{prop.relationship}}(mappedBy = "{{prop.extend.alias}}")
                 {% endif %}
             {% elif prop.relationship == "OneToOne" %}
-                {% if prop.isForeignerMaster %}
+                {% if prop.isLeader %}
     @{{prop.relationship}}
     @JoinColumn(name = "{{prop.extend.alias}}") 
                 {% endif %}
@@ -60,7 +60,7 @@ public {{type}} {{name}} extends Auditable implements Serializable {
         {% endif %}{%+ if prop.type == "Blob" %}
     @Lob
     {% endif -%}
-    {% if not (prop.relationship == "OneToMany" or (prop.relationship == "OneToOne" and not prop.isForeignerMaster)) %}
+    {% if not (prop.relationship == "OneToMany" or (prop.relationship == "OneToOne" and not prop.isLeader)) %}
     private {{prop.type|jpatype}} {{prop.name}}; {%+ if prop.comment %}// {{prop.comment}}{% endif %}
 
     {% endif %}

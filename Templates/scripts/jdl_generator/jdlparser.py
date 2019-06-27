@@ -32,19 +32,23 @@ class JDLParser:
         self.context.addObject(args[0], args[1])
 
     def comment(self, args):
-        #print(u"comment {0}".format(args[0].value))
         gp = GrammerParser(self.commentGrammar)
         tree, message = gp.loadTree(args[0].value)
         if tree == None: # 解析注释失败时，把注释完整地放到comment中
             print(u'parseing comment(line:{0}, col:{1}) error: {2}'.format(args[0].line, args[0].column, message))
             self.context.addComment(comment=args[0].value)
         else:
+            print(tree)
             alias = []
             length = []
             default = None
             nullable = True
-            unique = False
-            primary = False
+            unique = None
+            uniqueName = None
+            index = None
+            indexName = None
+            primary = None
+            primaryName = None
             comment = None
             for ch in tree.children:
                 if ch.data == "alias":
@@ -58,11 +62,19 @@ class JDLParser:
                         default = ch.children[0].value
                 elif ch.data == "unique":
                     unique = True
+                    if (len(ch.children) > 0):
+                        uniqueName = ch.children[0].value
+                elif ch.data == "index":
+                    index = True
+                    if (len(ch.children) > 0):
+                        indexName = ch.children[0].value
                 elif ch.data == "primary":
                     primary = True
+                    if (len(ch.children) > 0):
+                        primaryName = ch.children[0].value
                 elif ch.data == "comment":
                     comment = ch.children[0].value
-            self.context.addComment(alias, length, default, nullable, unique, primary, comment, args[0])
+            self.context.addComment(alias, length, default, nullable, unique, uniqueName, index, indexName, primary, primaryName, comment, args[0])
 
     def property(self, args):
         #print(u"property {0}".format(args[0].value))

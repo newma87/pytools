@@ -58,7 +58,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/actuator/**").hasAuthority(RolePermission.ADMIN)
                     .anyRequest().authenticated()
                 .and()
                     .apply(securityConfigurerAdapter());
@@ -73,8 +72,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/content/**")
                 .antMatchers("/swagger-ui.html")
                 .antMatchers("/swagger-resources/**")
-                .antMatchers("/actuator/info")
-                .antMatchers("/actuator/health")
+                .antMatchers("/v2/api-docs")
+                .antMatchers("/webjars/**")
+                .antMatchers("/actuator/**")
                 .antMatchers("/monitor/**")
                 .antMatchers("/h2/**");
     }

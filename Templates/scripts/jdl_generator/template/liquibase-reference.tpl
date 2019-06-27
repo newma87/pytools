@@ -13,33 +13,33 @@ xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     <changeSet id="initial-02" author="{{author}}" runOnChange="true">
     {% for model in models %}
         {% if model.relationship == "ManyToMany" %}
-        <createTable tableName="{{model.name}}">
+        <createTable tableName="{{model.tableName}}">
             <column name="{{model.baseColumn}}" type="{{model.baseColumnType}}">
                 <constraints nullable="false"/>
             </column>
-            <column name="{{model.referenceColumn}}" type="{{model.referenceColumnType}}">
+            <column name="{{model.slaveColumn}}" type="{{model.slaveColumnType}}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
         <rollback>
-            <dropTable tableName="{{model.name}}"/>
+            <dropTable tableName="{{model.tableName}}"/>
         </rollback>
 
-        <addPrimaryKey columnNames="{{model.baseColumn}}, {{model.referenceColumn}}" tableName="{{model.name}}"/>
+        <addPrimaryKey columnNames="{{model.baseColumn}}, {{model.slaveColumn}}" tableName="{{model.tableName}}"/>
 
         <addForeignKeyConstraint baseColumnNames="{{model.baseColumn}}"
-                                 baseTableName="{{model.name}}"
-                                 constraintName="fk_{{model.name}}_{{model.baseColumn}}"
-                                 referencedColumnNames="{{model.baseColumnRef}}"
-                                 referencedTableName="{{model.baseTable}}"/>
-        <addForeignKeyConstraint baseColumnNames="{{model.referenceColumn}}"
-                                 baseTableName="{{model.name}}"
-                                 constraintName="fk_{{model.name}}_{{model.referenceColumn}}"
-                                 referencedColumnNames="{{model.referenceColumnRef}}"
+                                 baseTableName="{{model.tableName}}"
+                                 constraintName="{{model.keyName}}"
+                                 referencedColumnNames="{{model.referenceColumn}}"
                                  referencedTableName="{{model.referenceTable}}"/>
+        <addForeignKeyConstraint baseColumnNames="{{model.slaveColumn}}"
+                                 baseTableName="{{model.tableName}}"
+                                 constraintName="{{model.slaveKeyName}}"
+                                 referencedColumnNames="{{model.slaveColumnRefColumn}}"
+                                 referencedTableName="{{model.slaveColumnRefTable}}"/>
         {% else %}
         <addForeignKeyConstraint baseColumnNames="{{model.baseColumn}}"
-                                 baseTableName="{{model.baseTable}}"
+                                 baseTableName="{{model.tableName}}"
                                  constraintName="{{model.name}}"
                                  referencedColumnNames="{{model.referenceColumn}}"
                                  referencedTableName="{{model.referenceTable}}"/>

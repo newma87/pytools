@@ -1,5 +1,5 @@
 # -*- encoding: utf8 -*-
-from jdlmodel import PClass, PProperty, PEnum, PExtends, aliasWord
+from jdlobject import PClass, PProperty, PEnum, PExtends, aliasWord
 
 def reverseWord(word, pot):
     rel = word.split(pot)
@@ -53,7 +53,25 @@ class ParserContext:
                 self.curRelateTableName = aliases[0]
             pass
 
-    def __addCommentToField(self, aliases, lengths, default, nullable, unique, primary, comment, token):
+    def __parseKeyComment(self, prop, ownerClass, unique, uniqueName, index, indexName, primary, primaryName):
+        # 添加unique
+        if (not unique or uniqueName is None):
+            prop.setUnique(unique)
+        else:
+            ownerClass.addUniqueConstraint(uniqueName, prop)
+        # 添加index
+        if (index):
+            ownerClass.addIndexConstraint(prop.extend.alias if indexName is None else indexName, prop)   
+                    
+        # 添加primary
+        if (not primary or primaryName is None):       
+            prop.setPrimary(primary)
+            if (primary):
+                ownerClass.resetPrimary(prop)
+        else:
+            ownerClass.addPrimaryConstraint(primaryName, prop)
+        
+    def __addCommentToField(self, aliases, lengths, default, nullable, unique, uniqueName, index, indexName, primary, primaryName, comment, token):
         #print(u"add comment {0} for field {1}".format(comment, self.curFiledName))
         if self.curObjectType == u"enum":
             curClass = self.classes[self.curObjectName]
@@ -71,10 +89,9 @@ class ParserContext:
                     curProperty.setRangeLength(lengths[0], lengths[1])
             if (default is not None) or not nullable:
                 curProperty.setDefault(default)
-            curProperty.setUnique(unique)
-            curProperty.setPrimary(primary)
-            if (primary):
-                curClass.resetPrimary(curProperty)
+
+            self.__parseKeyComment(curProperty, curClass, unique, uniqueName, index, indexName, primary, primaryName)
+
         elif self.curObjectType == u"relationship":
             leftClsName, leftPropName, rightClsName, rightPropName = self.curFiledName
             leftCls = self.classes[leftClsName]
@@ -84,18 +101,23 @@ class ParserContext:
 
             if len(aliases) > 0:  # 左关联的别名
                 leftProp.setAlias(aliases[0])
-                rightProp.setForeignerPropertyAlias(aliases[0])
+                rightProp.setSlavePropertyAlias(aliases[0])
             if len(aliases) > 1:    # 右关联的别名
                 rightProp.setAlias(aliases[1])
-                leftProp.setForeignerPropertyAlias(aliases[1])
+                leftProp.setSlavePropertyAlias(aliases[1])
+            
+            # 处理关系中的指定的
+            if self.curObjectName == "ManyToOne":
+                self.__parseKeyComment(leftProp, leftCls, unique, uniqueName, index, indexName, None, None)
+
         else:
             print(u"unprocess comment for object type {0}".format(self.curObjectType))
 
-    def addComment(self, aliases = [], lengths = [], default = None, nullable = True, unique = False, primary = False, comment = None, token = None):
+    def addComment(self, aliases = [], lengths = [], default = None, nullable = True, unique = False, uniqueName = None, index = False, indexName = None, primary = False, primaryName = None, comment = None, token = None):
         if self.curFiledName == None:    # object comment
             self.__addCommenToObject(aliases, comment, token)
         else: # property comment
-            self.__addCommentToField(aliases, lengths, default, nullable, unique, primary, comment, token)
+            self.__addCommentToField(aliases, lengths, default, nullable, unique, uniqueName, index, indexName, primary, primaryName, comment, token)
 
     def addProperty(self, name, type):
         curCls = self.classes[self.curObjectName]
@@ -158,21 +180,21 @@ class ParserContext:
         rightAliase = u"{0}_{1}".format(aliasWord(rightProp), aliasWord(leftClass.primary))
 
         # 生成外键时，会自动根据Many的标签指定是否为master Foreigner key。对于ManyToMay OneToOne则需要特殊处理
-        lProp = PProperty.foreignerProperty(leftProp, self.curObjectName, rightName, rightProp, leftAliase, rightAliase)
-        lProp.setForeignerTableName(u"{0}_{1}".format(aliasWord(leftName), aliasWord(rightName)))
-        rProp = PProperty.foreignerProperty(rightProp, reverseWord(self.curObjectName, u"To"), leftName, leftProp, rightAliase, leftAliase)
-        rProp.setForeignerTableName(u"{0}_{1}".format(aliasWord(rightName), aliasWord(leftName)))
+        lProp = PProperty.referenceProperty(self.curObjectName, leftClass, rightClass, leftProp, leftAliase, rightProp, rightAliase)
+        lProp.setRelationshipAlias(u"{0}_{1}".format(aliasWord(leftName), aliasWord(rightName)))
+        rProp = PProperty.referenceProperty(reverseWord(self.curObjectName, u"To"), rightClass, leftClass, rightProp, rightAliase, leftProp, leftAliase)
+        rProp.setRelationshipAlias(u"{0}_{1}".format(aliasWord(rightName), aliasWord(leftName)))
         
         leftClass.addProperty(lProp)
         rightClass.addProperty(rProp)
 
         # ManyToMany和OneToOne，以左边为master Foreigner key
-        if self.curObjectName == u"ManyToMany" or self.curObjectName == u"OneToOne":
-            lProp.setIsForeignerMaster(True)
-            rProp.setIsForeignerMaster(False)
-            if self.curRelateTableName is not None:
-                lProp.setForeignerTableName(self.curRelateTableName)
-                rProp.setForeignerTableName(self.curRelateTableName)
+        if self.curObjectName == u"ManyToMany" or self.curObjectName == u"OneToOne" or self.curObjectName == u"ManyToOne":
+            lProp.setLeader(True)
+            rProp.setLeader(False)
+            if self.curRelateTableName is not None:  # 当relationship后面的注释有指定表名时，将修改中间表名
+                lProp.setRelationshipAlias(self.curRelateTableName)
+                rProp.setRelationshipAlias(self.curRelateTableName)
 
     def addEnum(self, name, value = None):
         curCls = self.classes[self.curObjectName]

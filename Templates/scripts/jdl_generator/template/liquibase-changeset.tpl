@@ -25,11 +25,12 @@
                 <constraints nullable="true"/>
             </column>
         </createTable>
-        {% for ic in model.IndexConstraint %}
-        <createIndex indexName="{{ic.name}}"
-                     tableName="{{ic.baseTabelName}}"
-                     unique="true">
-            <column name="{{ic.baseColumn}}" type="{{ic.baseColumnType|lower}}"/>
+        {% for ic in model.indexConstraints %}
+        <createIndex indexName="{{ic.indexName}}"
+                     tableName="{{ic.tableName}}"{%+ if ic.unique %} unique="true"{% endif %}>
+            {% for prop in ic.refProps %}
+            <column name="{{prop[0]}}" type="{{prop[1]|lower}}"/>
+            {% endfor %}
         </createIndex>
         {% endfor %}
     {% endfor %}

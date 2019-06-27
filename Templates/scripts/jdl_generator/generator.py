@@ -6,7 +6,7 @@ import codecs
 import jinja2
 
 import xml.dom.minidom as minidom
-
+from jdlobject import PProperty, PClass, PExtends, PEnum
 from jdlmodel import TabelModel, ColumnModel, IndexModel, ForeignerModel
 
 def mkdir(dirPath):
@@ -176,7 +176,7 @@ class LiquiBaseGenerator:
         for cls in classes: 
             if cls.type == "class":
                 tbl = TabelModel()
-                foreigner = tbl.mapper(cls, classes)
+                foreigner = tbl.mapper(cls)
                 tblModels.append(tbl)
                 if foreigner and len(foreigner) > 0:
                     foreignerContraints = foreignerContraints + foreigner
