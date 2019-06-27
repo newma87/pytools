@@ -133,7 +133,7 @@ class PProperty(PBase):
 
     def setLeader(self, yesOrNo = True):
         self.isLeader = yesOrNo
-        if (self.relationship == u"ManyToOne"): # ManyToOne时，并且为leader时，需要为其建立索引
+        if (self.isLeader and self.relationship == u"ManyToOne"): # ManyToOne时，并且为leader时，需要为其建立索引
             self.setIndex()
 
     def setRangeLength(self, min, max):

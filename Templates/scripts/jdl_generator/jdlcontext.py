@@ -182,7 +182,7 @@ class ParserContext:
         # 生成外键时，会自动根据Many的标签指定是否为master Foreigner key。对于ManyToMay OneToOne则需要特殊处理
         lProp = PProperty.referenceProperty(self.curObjectName, leftClass, rightClass, leftProp, leftAliase, rightProp, rightAliase)
         lProp.setRelationshipAlias(u"{0}_{1}".format(aliasWord(leftName), aliasWord(rightName)))
-        rProp = PProperty.referenceProperty(reverseWord(self.curObjectName, u"To"), rightClass, leftClass, rightProp, rightAliase, leftProp, leftAliase)
+        rProp = PProperty.referenceProperty(self.curObjectName, rightClass, leftClass, rightProp, rightAliase, leftProp, leftAliase)
         rProp.setRelationshipAlias(u"{0}_{1}".format(aliasWord(rightName), aliasWord(leftName)))
         
         leftClass.addProperty(lProp)

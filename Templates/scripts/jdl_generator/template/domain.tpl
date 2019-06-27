@@ -35,14 +35,14 @@ public {{type}} {{name}} extends Auditable implements Serializable {
                 joinColumns = @JoinColumn(name = "{{prop.extend.alias}}"),
                 inverseJoinColumns = @JoinColumn(name = "{{prop.slavePropAlias}}"))
                 {% else %}
-    @{{prop.relationship}}(mappedBy = "{{prop.extend.alias}}")
+    @{{prop.relationship}}(mappedBy = "{{prop.slavePropName}}")
                 {% endif %}
             {% elif prop.relationship == "OneToOne" %}
                 {% if prop.isLeader %}
     @{{prop.relationship}}
     @JoinColumn(name = "{{prop.extend.alias}}") 
                 {% endif %}
-            {% elif prop.relationship == "ManyToOne" %}
+            {% elif prop.relationship == "ManyToOne" and prop.isLeader %}
     @{{prop.relationship}}
     @JoinColumn(name = "{{prop.extend.alias}}") 
             {% endif %}
@@ -60,7 +60,7 @@ public {{type}} {{name}} extends Auditable implements Serializable {
         {% endif %}{%+ if prop.type == "Blob" %}
     @Lob
     {% endif -%}
-    {% if not (prop.relationship == "OneToMany" or (prop.relationship == "OneToOne" and not prop.isLeader)) %}
+    {% if not (prop.relationship == "OneToMany" or (prop.relationship == "ManyToOne" and not prop.isLeader) or (prop.relationship == "OneToOne" and not prop.isLeader)) %}
     private {{prop.type|jpatype}} {{prop.name}}; {%+ if prop.comment %}// {{prop.comment}}{% endif %}
 
     {% endif %}
@@ -69,7 +69,7 @@ public {{type}} {{name}} extends Auditable implements Serializable {
     // getter and setter
     {%for prop in properties%}
 
-    {% if not (prop.relationship == "OneToMany" or (prop.relationship == "OneToOne" and not prop.isForeignerMaster)) %}
+    {% if not (prop.relationship == "OneToMany" or (prop.relationship == "ManyToOne" and not prop.isLeader) or (prop.relationship == "OneToOne" and not prop.isLeader)) %}
     public {{prop.type|jpatype}} get{{prop.name|captain}}() {
         return this.{{prop.name}};
     }
@@ -91,7 +91,7 @@ public {{type}} {{name}} extends Auditable implements Serializable {
             "'{{primary.name}}': '" + get{{primary.name|captain}}() + "'" +
         {% for prop in properties %}
             {% if not prop.extend.isPrimary %}
-                {% if not prop.isForeignerKey %}
+                {% if not prop.relationship %}
             ", '{{prop.name}}': '" + get{{prop.name|captain}}() + "'" +
                 {% endif %}
             {% endif %}
