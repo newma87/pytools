@@ -274,7 +274,7 @@ class PClass(PBase):
         return self.getConstraints(UNIQUE)
 
     def addConstraint(self, index, keyName, prop):
-        print (u"add constraints: {0} {1} {2}".format(index, keyName, prop.name))
+        #print (u"add constraints: {0} {1} {2}".format(index, keyName, prop.name))
         if index >= len(self.constraints) :
             print(u"add contraint failed for unknown contraint type \'{0}\'".format(index))
             return

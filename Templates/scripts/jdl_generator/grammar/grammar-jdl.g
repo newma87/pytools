@@ -5,7 +5,7 @@ field: CNAME KEY_TYPE [","] [comment] WS            -> property
     |  reference "to" reference [","] [comment] WS  -> relation
     |  ENUM_VALUE ["=" DIGIT] [","] [comment] WS      -> enum
 reference: CNAME [column]
-?column: "{" CNAME "}"
+?column: "{" CNAME "}" 
 comment: "//" LINE
 
 ENUM_VALUE: /[A-Z]+/
@@ -32,4 +32,5 @@ NEW_LINE: (CR?LF)+
 %import common.CNAME
 %import common.DIGIT
 %import common.WS
+
 %ignore WS

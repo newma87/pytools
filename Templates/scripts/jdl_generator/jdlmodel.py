@@ -50,7 +50,7 @@ class TabelModel:
 
         # 普通索引    
         indexes = classModel.getIndexConstraints()
-        print(u"count: {0}, keys: {1}".format(len(indexes), indexes.keys()))
+        #print(u"count: {0}, keys: {1}".format(len(indexes), indexes.keys()))
         for key, props in indexes.items():
             im = IndexModel()
             im.mapper("idx_" + self.__getName(props), props)
