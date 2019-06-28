@@ -32,8 +32,8 @@ public {{type}} {{name}} extends Auditable implements Serializable {
                 {% if prop.isLeader %}
     @{{prop.relationship}}
     @JoinTable(name = "{{prop.relationshipAlias}}", 
-                joinColumns = @JoinColumn(name = "{{prop.extend.alias}}"),
-                inverseJoinColumns = @JoinColumn(name = "{{prop.slavePropAlias}}"))
+                joinColumns = @JoinColumn(name = "{{prop.slavePropAlias}}"),
+                inverseJoinColumns = @JoinColumn(name = "{{prop.extend.alias}}"))
                 {% else %}
     @{{prop.relationship}}(mappedBy = "{{prop.slavePropName}}")
                 {% endif %}
