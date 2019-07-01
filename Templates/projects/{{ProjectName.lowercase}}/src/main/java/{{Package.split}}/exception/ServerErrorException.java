@@ -18,6 +18,11 @@ public class ServerErrorException extends Exception {
         this.errorCode = errorCode;
     }
 
+    public ServerErrorException(Exception e) {
+        super(e.getMessage(), e);
+        this.errorCode = ErrorConstants.ERR_UNKNOWN;
+    }
+
     public ServerErrorException(String message) {
         super(message);
         this.errorCode = ErrorConstants.ERR_UNKNOWN;

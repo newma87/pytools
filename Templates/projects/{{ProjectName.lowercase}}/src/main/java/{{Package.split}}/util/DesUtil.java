@@ -29,9 +29,7 @@ public class DesUtil {
      * @throws Exception
      */
     public static String encrypt(String data) throws UnsupportedEncodingException, NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidKeySpecException {
-        byte[] bt = encrypt(data.getBytes(ENCODE), defaultKey.getBytes(ENCODE));
-        String strs = Base64.getEncoder().encodeToString(bt);
-        return strs;
+        return encrypt(data, defaultKey);
     }
 
     /**
@@ -42,12 +40,7 @@ public class DesUtil {
      * @throws Exception
      */
     public static String decrypt(String data) throws UnsupportedEncodingException, NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidKeySpecException {
-        if (data == null){
-            return null;
-        }
-        byte[] buf = Base64.getDecoder().decode(data);
-        byte[] bt = decrypt(buf, defaultKey.getBytes(ENCODE));
-        return new String(bt, ENCODE);
+        return decrypt(data, defaultKey);
     }
 
     /**
@@ -58,7 +51,7 @@ public class DesUtil {
      * @throws Exception
      */
     public static String encrypt(String data, String key) throws UnsupportedEncodingException, NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, InvalidKeySpecException {
-        byte[] bt = encrypt(data.getBytes(ENCODE), key.getBytes(ENCODE));
+        byte[] bt = encrypt(data.getBytes(ENCODE), 0, data.length(), key.getBytes(ENCODE));
         String strs = Base64.getEncoder().encodeToString(bt);
         return strs;
     }
@@ -76,7 +69,7 @@ public class DesUtil {
             return null;
         }
         byte[] buf = Base64.getDecoder().decode(data);
-        byte[] bt = decrypt(buf, key.getBytes(ENCODE));
+        byte[] bt = decrypt(buf, 0, buf.length, key.getBytes(ENCODE));
         return new String(bt, ENCODE);
     }
     /**
@@ -88,7 +81,7 @@ public class DesUtil {
      * @return
      * @throws Exception
      */
-    private static byte[] encrypt(byte[] data, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, BadPaddingException, IllegalBlockSizeException {
+    public static byte[] encrypt(byte[] data, int offset, int length, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, BadPaddingException, IllegalBlockSizeException {
         // 生成一个可信任的随机数源
         SecureRandom sr = new SecureRandom();
         // 从原始密钥数据创建DESKeySpec对象
@@ -104,7 +97,7 @@ public class DesUtil {
         // 用密钥初始化Cipher对象
         cipher.init(Cipher.ENCRYPT_MODE, secureKey, sr);
 
-        return cipher.doFinal(data);
+        return cipher.doFinal(data, offset, length);
     }
 
     /**
@@ -115,7 +108,7 @@ public class DesUtil {
      * @return
      * @throws Exception
      */
-    private static byte[] decrypt(byte[] data, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, BadPaddingException, IllegalBlockSizeException {
+    public static byte[] decrypt(byte[] data, int offset, int length, byte[] key) throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, BadPaddingException, IllegalBlockSizeException {
         // 生成一个可信任的随机数源
         SecureRandom sr = new SecureRandom();
 
@@ -132,7 +125,7 @@ public class DesUtil {
         // 用密钥初始化Cipher对象
         cipher.init(Cipher.DECRYPT_MODE, secureKey, sr);
 
-        return cipher.doFinal(data);
+        return cipher.doFinal(data, offset, length);
     }
 
 }

@@ -1,8 +1,9 @@
 /target/
 !.mvn/wrapper/maven-wrapper.jar
-/domain/
+domain/
 tmp/
 logs/
+docs/2.dataModel/jdls/*.png
 
 ### IntelliJ IDEA ###
 .idea

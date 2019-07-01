@@ -106,4 +106,12 @@ public class TokenProvider {
         }
         return false;
     }
+
+    public long getTokenValidityInMilliseconds() {
+        return tokenValidityInMilliseconds;
+    }
+
+    public long getTokenValidityInMillisecondsForRememberMe() {
+        return tokenValidityInMillisecondsForRememberMe;
+    }
 }

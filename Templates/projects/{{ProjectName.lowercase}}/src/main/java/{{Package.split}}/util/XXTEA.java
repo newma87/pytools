@@ -18,20 +18,10 @@ public class XXTEA {
     static final Logger log = LoggerFactory.getLogger(XXTEA.class);
 
     public static int[] encryptKeys = {
-            0x00543210, 0x00543210,
-            0x00543210, 0x00543210
+            0x00543210, 0x00543211,
+            0x00543212, 0x00543213
     };
 
-    public String decode(String src) {
-        Assert.isTrue(false, "Not implemented!");
-        return null;
-    }
-
-    private String formateTimeString(long time) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-        String result = df.format(time);
-        return result.substring(2);
-    }
 
     //===================== XXTEA加/解密 来自于厂家提供的代码 ===================
     public static int[] encrypt(int[] src, int[] keys, int srcLength) {
@@ -91,3 +81,4 @@ public class XXTEA {
         return src;
     }
 }
+
