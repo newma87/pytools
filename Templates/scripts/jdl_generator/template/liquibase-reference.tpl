@@ -40,7 +40,7 @@ xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         {% else %}
         <addForeignKeyConstraint baseColumnNames="{{model.baseColumn}}"
                                  baseTableName="{{model.tableName}}"
-                                 constraintName="{{model.name}}"
+                                 constraintName="{{model.keyName}}"
                                  referencedColumnNames="{{model.referenceColumn}}"
                                  referencedTableName="{{model.referenceTable}}"/>
         {% endif %}
