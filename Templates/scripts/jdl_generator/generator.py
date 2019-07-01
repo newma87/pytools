@@ -176,12 +176,13 @@ class LiquiBaseGenerator:
         for cls in classes: 
             if cls.type == "class":
                 tbl = TabelModel()
-                foreigner = tbl.mapper(cls)
+                tbl.mapper(cls)
                 tblModels.append(tbl)
-                if foreigner and len(foreigner) > 0:
-                    foreignerContraints = foreignerContraints + foreigner
+                if len(tbl.foreignerConstraints) > 0:
+                    foreignerContraints = foreignerContraints + tbl.foreignerConstraints
 
         files.append(self.__generateXmlFile(len(files) + 1, u"liquibase-changeset.tpl", u"initialize_table.xml", tblModels))
+
         if (len(foreignerContraints) > 0):
             files.append(self.__generateXmlFile(len(files) + 1, u"liquibase-reference.tpl", u"add_constraints.xml", foreignerContraints))
         return files

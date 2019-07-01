@@ -3,6 +3,7 @@ package {{ package }}.domain;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.*;
 
@@ -26,7 +27,11 @@ public {{type}} {{name}} extends Auditable implements Serializable {
 
     private static final long serialVersionUID = 1L;
     {% for prop in properties %}
-
+        {% if prop.comment %}
+    /**
+     * {{prop.comment}}
+     */
+        {% endif %}
         {% if prop.relationship %}
             {% if prop.relationship == "ManyToMany" %}
                 {% if prop.isLeader %}
@@ -61,7 +66,7 @@ public {{type}} {{name}} extends Auditable implements Serializable {
     @Lob
     {% endif -%}
     {% if not (prop.relationship == "OneToMany" or (prop.relationship == "ManyToOne" and not prop.isLeader) or (prop.relationship == "OneToOne" and not prop.isLeader)) %}
-    private {{prop.type|jpatype}} {{prop.name}}; {%+ if prop.comment %}// {{prop.comment}}{% endif %}
+    private {{prop.type|jpatype}} {{prop.name}};
 
     {% endif %}
     {% endfor %}
