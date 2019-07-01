@@ -1,5 +1,6 @@
 package {{Package}}.config;
 
+import {{Package}}.security.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -26,10 +27,19 @@ import java.util.List;
 public class SwaggerConfig {
 
     @Bean
-    public Docket createRestApi() {
+    public Docket createRestApi(TokenProvider tokenProvider) {
+        List<String> authorities = new ArrayList<>();
+        authorities.add("ROLE_ADMIN");
+        String token = tokenProvider.createToken("admin",  authorities, true);
         ParameterBuilder tokenPar = new ParameterBuilder();
         List<Parameter> pars = new ArrayList<Parameter>();
-        tokenPar.name("Authorization").description("令牌, Bearer 开头").modelRef(new ModelRef("string")).parameterType("header").required(false).build();
+        tokenPar.name("Authorization")
+                .description("令牌, Bearer 开头")
+                .modelRef(new ModelRef("string"))
+                .defaultValue("Bearer " + token)
+                .parameterType("header")
+                .required(false)
+                .build();
         pars.add(tokenPar.build());
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
