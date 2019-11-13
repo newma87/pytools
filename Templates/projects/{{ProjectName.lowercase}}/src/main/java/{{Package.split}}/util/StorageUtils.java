@@ -1,4 +1,4 @@
-package com.leping.util;
+package {{Package}}.util;
 
 import java.io.File;
 import java.io.FileInputStream;
