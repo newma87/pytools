@@ -83,11 +83,12 @@ class JAVACodeGenerator:
         }
         return context
 
-    def __generateJava(self, templateName, subDir, context):
+    def __generateJava(self, templateName, subDir, context, replace=True):
         template = os.path.join(self.templateDir, templateName)
         codeDir = self.__getGernerateDir(subDir)
         codeFile = os.path.join(codeDir, u"{0}.java".format(context[u"name"]))
-        renderToFile(template, codeFile, context)
+        if (not os.path.exists(codeFile) or replace):
+            renderToFile(template, codeFile, context)
 
     def __makeRepositoryContext(self, model):
         prop = model.getPrimaryProperty()
@@ -125,7 +126,7 @@ class JAVACodeGenerator:
         if (os.path.exists(codeFile)):
             context['extra'] = self.__getExtraDataFromRepository(codeFile)
 
-        self.__generateJava(templateName, "repository", context)
+        self.__generateJava(templateName, "repository", context, replace=False)
 
     def generate(self, models):
         for model in models:

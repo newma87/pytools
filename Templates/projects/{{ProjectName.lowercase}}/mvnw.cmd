@@ -40,7 +40,7 @@
 
 @set ROOT_DIR=%~dp0..\..
 @set PACKAGE_PATH=%PACKAGE:.=\%
-@set PROJ_DIR=%ROOT_DIR%\projects\%PROJECT_NAME%
+@set PROJ_DIR=%ROOT_DIR%\projects\{{ProjectName|lowercase}}
 @set DOMAIN_DIR=%PROJ_DIR%\src\main\java\%PACKAGE_PATH%\domain
 @set SCRIPT_DIR=%ROOT_DIR%\scripts\jdl_generator
 @set JDL_DIR=%ROOT_DIR%\docs\2.dataModel\jdls

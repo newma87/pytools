@@ -1,9 +1,10 @@
-
-${AnsiColor.GREEN}     _______.     ___       __   __      ${AnsiColor.RED} _______  __       _______. __    __  
-${AnsiColor.GREEN}    /       |    /   \     |  | |  |     ${AnsiColor.RED}|   ____||  |     /       ||  |  |  | 
-${AnsiColor.GREEN}   |   (----`   /  ^  \    |  | |  |     ${AnsiColor.RED}|  |__   |  |    |   (----`|  |__|  | 
-${AnsiColor.GREEN}    \   \      /  /_\  \   |  | |  |     ${AnsiColor.RED}|   __|  |  |     \   \    |   __   | 
-${AnsiColor.GREEN}.----)   |    /  _____  \  |  | |  `----.${AnsiColor.RED}|  |     |  | .----)   |   |  |  |  | 
-${AnsiColor.GREEN}|_______/    /__/     \__\ |__| |_______|${AnsiColor.RED}|__|     |__| |_______/    |__|  |__| 
+﻿
+${AnsiColor.GREEN}                         ${AnsiColor.RED}              ${AnsiColor.RED}
+${AnsiColor.GREEN}   _____ _               ${AnsiColor.RED} __  __       ${AnsiColor.RED} _____        __ _   
+${AnsiColor.GREEN}  / ____| |              ${AnsiColor.RED}|  \/  |      ${AnsiColor.RED}/ ____|      / _| |  
+${AnsiColor.GREEN} | |    | |__   ___ _ __ ${AnsiColor.RED}| \  / | __ _${AnsiColor.RED}| (___   ___ | |_| |_ 
+${AnsiColor.GREEN} | |    | '_ \ / _ \ '_ \${AnsiColor.RED}| |\/| |/ _` |${AnsiColor.RED}\___ \ / _ \|  _| __|
+${AnsiColor.GREEN} | |____| | | |  __/ | | ${AnsiColor.RED}| |  | | (_| |${AnsiColor.RED}____) | (_) | | | |_ 
+${AnsiColor.GREEN}  \_____|_| |_|\___|_| |_${AnsiColor.RED}|_|  |_|\__,_|${AnsiColor.RED}_____/ \___/|_|  \__|
                                                                                
-${AnsiColor.BRIGHT_BLUE}:: 旗鱼软件  版权所有 :: Running Spring Boot ${spring-boot.version} :: ${AnsiColor.DEFAULT}
+${AnsiColor.BRIGHT_BLUE}:: 广州宸码软件科技有限公司  版权所有 :: Running Spring Boot ${spring-boot.version} :: ${AnsiColor.DEFAULT}

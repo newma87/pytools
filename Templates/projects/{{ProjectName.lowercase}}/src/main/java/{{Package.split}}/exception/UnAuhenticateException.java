@@ -1,4 +1,4 @@
-package com.leping.exception;
+package {{Package}}.exception;
 
 import org.springframework.security.core.AuthenticationException;
 

@@ -40,7 +40,7 @@ PACKAGE={{Package}}
 
 ROOT_DIR=${basepath}/../..
 PACKAGE_PATH=$(echo ${PACKAGE} | sed "s/\./\//g")
-PROJ_DIR=${ROOT_DIR}/projects/${PROJECT_NAME}
+PROJ_DIR=${ROOT_DIR}/projects/{{ProjectName|lowercase}}
 DOMAIN_DIR=${PROJ_DIR}/src/main/java/${PACKAGE_PATH}/domain
 SCRIPT_DIR=${ROOT_DIR}/scripts/jdl_generator
 JDL_DIR=${ROOT_DIR}/docs/2.dataModel/jdls
@@ -51,7 +51,7 @@ if [ ! -d ${DOMAIN_DIR} ]; then
     exit 1
   else
     echo "Auto generating jpa code and liquibase xml file ..."
-    python ${SCRIPT_DIR}/main.py ${JDL_DIR}/{{ProjectName}}.jdl -p ${PACKAGE} -w ${PROJ_DIR}  -t ${SCRIPT_DIR}/template -g ${SCRIPT_DIR}/grammar -T "{{ProjectName|lowercase}}" -x -r
+    python3 ${SCRIPT_DIR}/main.py ${JDL_DIR}/{{ProjectName}}.jdl -p ${PACKAGE} -w ${PROJ_DIR}  -t ${SCRIPT_DIR}/template -g ${SCRIPT_DIR}/grammar -T "{{ProjectName|lowercase}}" -x -r
   fi
 fi
 
