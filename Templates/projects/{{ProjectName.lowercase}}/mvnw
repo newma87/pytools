@@ -36,23 +36,36 @@
 
 basepath=$(cd `dirname $0`; pwd)
 PROJECT_NAME={{ProjectName}}
+PROJECT_NAME_LW=$(echo ${PROJECT_NAME} | tr 'A-Z' 'a-z')
 PACKAGE={{Package}}
+PACKAGE_PATH=$(echo ${PACKAGE} | sed "s/\./\//g")
 
 ROOT_DIR=${basepath}/../..
-PACKAGE_PATH=$(echo ${PACKAGE} | sed "s/\./\//g")
-PROJ_DIR=${ROOT_DIR}/projects/{{ProjectName|lowercase}}
+PROJ_DIR=${ROOT_DIR}/projects/${PROJECT_NAME}
 DOMAIN_DIR=${PROJ_DIR}/src/main/java/${PACKAGE_PATH}/domain
 SCRIPT_DIR=${ROOT_DIR}/scripts/jdl_generator
 JDL_DIR=${ROOT_DIR}/docs/2.dataModel/jdls
 
-if [ ! -d ${DOMAIN_DIR} ]; then
-  if [ ! -f ${SCRIPT_DIR}/main.py ]; then
-    echo "Error: not found main.py in directory ${SCRIPT_DIR}"
-    exit 1
-  else
-    echo "Auto generating jpa code and liquibase xml file ..."
-    python3 ${SCRIPT_DIR}/main.py ${JDL_DIR}/{{ProjectName}}.jdl -p ${PACKAGE} -w ${PROJ_DIR}  -t ${SCRIPT_DIR}/template -g ${SCRIPT_DIR}/grammar -T "{{ProjectName|lowercase}}" -x -r
-  fi
+#EXEC=${SCRIPT_DIR}/jdlcompiler
+EXEC="python3 ${SCRIPT_DIR}/main.py"
+
+if [ "$1" = "clean" ]
+then
+    echo "Removed jdl generated files ..."
+    rm -rfv ${DOMAIN_DIR}
+    rm -fv src/main/resources/changelog/change/1.${PROJECT_NAME_LW}_initialize_table.xml
+    rm -fv src/main/resources/changelog/change/2.${PROJECT_NAME_LW}_add_constraints.xml
+
+else
+    if [ ! -d ${DOMAIN_DIR} ]; then
+      if [ ! -f ${SCRIPT_DIR}/main.py ]; then
+        echo "Error: not found main.py in directory ${SCRIPT_DIR}"
+        exit 1
+      else
+        echo "Auto generating jpa code and liquibase xml file ..."
+        ${EXEC} ${JDL_DIR}/${PROJECT_NAME}.jdl -p ${PACKAGE} -w ${PROJ_DIR}  -t ${SCRIPT_DIR}/template -g ${SCRIPT_DIR}/grammar -T ${PROJECT_NAME_LW} -x -r
+      fi
+    fi
 fi
 
 if [ $? -ne 0 ]; then
