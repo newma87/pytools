@@ -1,0 +1,3 @@
+[submodule "Templates/scripts/jdl_generator"]
+	path = Templates/scripts/jdl_generator
+	url = git@chenmasoft.cn:chenma_private/jdl_generator.git
