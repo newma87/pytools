@@ -23,7 +23,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<poi.version>3.8</poi.version>
+		<poi.version>4.1.2</poi.version>
         <liquibase.version>3.6.1</liquibase.version>
 		<springfox.version>2.7.0</springfox.version>
 		<swagger.annotation>1.5.16</swagger.annotation>
